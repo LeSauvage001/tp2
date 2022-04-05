@@ -4,10 +4,7 @@ const places = require('./places.json')
 const {body, validationResult} = require("express-validator");
 
 app.use(express.json());
-/*app.post('/places/', (req,res) => {
-    places.push(req.body)
-    res.status(200).json(places)
-}) */
+
 //middleware
 
 

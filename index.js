@@ -4,7 +4,6 @@ const places = require('./places.json')
 const {body, validationResult} = require("express-validator");
 
 app.use(express.json());
-
 //middleware
 
 
@@ -36,7 +35,9 @@ app.post(
     body('latitude').isFloat(),
     //long
     body('longitude').isFloat(),
-    (req, res) => {
+
+        (req, res) => {
+      res.status(200).json(places);
         // Finds the validation errors in this request and wraps them in an object with handy functions
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -47,6 +48,23 @@ app.post(
     },
 );
 
+app.put('/places/:id', (req,res) => {
+    const id = parseInt(req.params.id)
+    let place = places.find(place=> place.id === id)
+    place.name =req.body.name
+        place.address =req.body.address
+        place.about =req.body.about
+        place.latitude =req.body.latitude
+        place.longitude =req.body.longitude
+        res.status(200).json(place)
+})
+
+app.delete('/places/:id', (req,res) => {
+    const id = parseInt(req.params.id)
+    let place = places.find(place => place.id === id)
+    places.splice(places.indexOf(place),1)
+    res.status(200).json(places)
+})
 
 app.listen(8080, () => {
     console.log("Serveur à l'écoute")

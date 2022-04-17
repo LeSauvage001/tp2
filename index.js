@@ -44,7 +44,14 @@ app.post(
            return res.status(400).json({ errors: errors.array() });
         }
 
-
+   places.create({
+      id: req.body.id,
+      name: req.body.name,
+      address: req.body.address,
+      about: req.body.about,
+      latitude: req.body.latitude,
+      longitude: req.body.longitude,
+    }).then(user => res.json(places));
     },
 );
 

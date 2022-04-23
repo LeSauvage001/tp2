@@ -33,7 +33,7 @@ app.get('/places/:id', (req,res) => {
 })
 
 
-// *********** l'ajout de places ***********
+//  l'ajout de places
 
 const { body, validationResult } = require('express-validator');
 

@@ -1,6 +1,6 @@
 # tp2-act
 
-dance ce tp jai mis les routes comme get post put delete et jai tester avec postman.
+dans ce tp jai mis les routes comme get post put delete et jai tester avec postman.
 la route post ne veut pas fonctionner correctement 
 mes les autres routes sont bien fonctionnels.
 

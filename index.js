@@ -1,59 +1,67 @@
 const express = require('express')
 const app = express()
 const places = require('./places.json')
-const {body, validationResult} = require("express-validator");
 
-app.use(express.json());
-//middleware
+
+
+// tourism api
+
+app.get("/", (req, res) => {
+    res.json({ status: "success", message: "Welcome To tourism API" });
+  });
+  
+
+
+// Middleware
+app.use(express.json())
+
+
 
 
 app.get('/places/', (req,res) => {
     res.status(200).json(places)
 })
 
+
+
+
 app.get('/places/:id', (req,res) => {
 
     const id = parseInt(req.params.id)
-    const  place = places.find(place => place.id === id)
+    const  place = places.find (place => place.id === id)
     res.status(200).json(place)
 })
 
 
-// post route with validation
+// *********** l'ajout de places ***********
+
+const { body, validationResult } = require('express-validator');
+
+
 app.post(
-    '/places',
+  '/places',
 
-    // id
-    body('id').isInt(),
-    // name
-   body('name').not().isEmpty().trim().escape(),
-    // address
-    body('address').not().isEmpty().trim().escape(),
-    // about
-    body('about').not().isEmpty().trim().escape(),
-    //lat
-    body('latitude').isFloat(),
-    //long
-    body('longitude').isFloat(),
 
-        (req, res) => {
-      res.status(200).json(places);
-        // Finds the validation errors in this request and wraps them in an object with handy functions
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-           return res.status(400).json({ errors: errors.array() });
-        }
+  body('id').isDecimal({ min: 0 }),
+  body('name').isAlpha(),
+  body('about').isAlpha(),
+  body('longitude').isFloat,
+  body('latitude').isFloat,
 
-   places.create({
-      id: req.body.id,
-      name: req.body.name,
-      address: req.body.address,
-      about: req.body.about,
-      latitude: req.body.latitude,
-      longitude: req.body.longitude,
-    }).then(user => res.json(places));
-    },
-);
+
+
+
+  (req, res) => {
+    // Finds the validation errors in this request and wraps them in an object with handy functions :
+
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    };
+    places.push(req.body)
+    res.status(200).json(places)
+  })
+
 
 app.put('/places/:id', (req,res) => {
     const id = parseInt(req.params.id)
@@ -73,6 +81,26 @@ app.delete('/places/:id', (req,res) => {
     res.status(200).json(places)
 })
 
+
+//Error Handling 
+
+app.all('*', (req, res, next) => {
+    res.status(404).json({
+      status: 'fail',
+      message: `Can't find ${req.originalUrl} on this server!`
+     
+    });
+    
+    const err = new Error(`Can't find ${req.originalUrl} on this server!`);
+    err.status = 'fail';
+    err.statusCode = 404;
+    
+    next(err);
+  });
+
+
 app.listen(8080, () => {
     console.log("Serveur à l'écoute")
 })
+
+module.exports = app;

@@ -59,7 +59,7 @@ app.post(
       return res.status(400).json({ errors: errors.array() });
     };
     places.push(req.body)
-    res.status(200).json(places)
+     return res.status(200).json(places)
   })
 
 
